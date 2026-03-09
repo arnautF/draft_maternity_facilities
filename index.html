@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Porodilišta u Srbiji</title>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <style>
+    :root{
+      --bg1:#ffffff;
+      --bg2:#f6fbff;
+      --bg3:#fff6fb;
+      --panel: rgba(255,255,255,0.92);
+      --text:#0f172a;
+      --muted: rgba(15,23,42,0.62);
+      --border: rgba(15,23,42,0.12);
+      --shadow: 0 14px 40px rgba(15, 23, 42, 0.12);
+      --shadow2: 0 10px 26px rgba(15, 23, 42, 0.10);
+      --r:18px;
+      --r2:14px;
+      --brand:#ff4aa2;
+      --brand2:#7c5cff;
+      --brand3:#00b3ff;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1100px 700px at 10% 10%, rgba(255,74,162,0.10), transparent 60%),
+        radial-gradient(900px 650px at 92% 18%, rgba(124,92,255,0.10), transparent 58%),
+        radial-gradient(900px 700px at 40% 95%, rgba(0,179,255,0.09), transparent 60%),
+        linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg3) 100%);
+      min-height: 100vh;
+    }
+
+    .wrap{ max-width: 1220px; margin: 0 auto; padding: 26px 18px 60px; }
+
+    .app-hidden{
+      visibility: hidden;
+      pointer-events: none;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .auth-overlay{
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 20px;
+      background:
+        radial-gradient(900px 600px at 15% 10%, rgba(255,74,162,0.12), transparent 60%),
+        radial-gradient(900px 600px at 85% 20%, rgba(124,92,255,0.12), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(246,251,255,0.98), rgba(255,246,251,0.98));
+      backdrop-filter: blur(8px);
+    }
+
+    .auth-card{
+      width: 100%;
+      max-width: 460px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.96);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 26px 22px;
+    }
+
+    .auth-logo{
+      width: 68px;
+      height: 68px;
+      object-fit: contain;
+      display:block;
+      margin: 0 0 14px;
+    }
+
+    .auth-title{
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .auth-sub{
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .auth-row{ margin-top: 16px; }
+
+    .auth-actions{
+      display:flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .auth-msg{
+      margin-top: 12px;
+      min-height: 20px;
+      font-size: 13px;
+      color: #b42318;
+      font-weight: 600;
+    }
+
+    header{
+      display:flex;
+      justify-content: space-between;
+      align-items:flex-start;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .header-left{
+      display:flex;
+      align-items:flex-start;
+      gap: 14px;
+      max-width: 860px;
+    }
+
+    .site-logo{
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      flex: 0 0 auto;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.80);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      padding: 6px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    h1{
+      margin: 0;
+      font-size: clamp(26px, 3vw, 42px);
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+    }
+
+    .sub{
+      margin: 10px 0 0;
+      max-width: 820px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .actions{ display:flex; gap: 10px; flex-wrap: wrap; align-items:center; }
+
+    .btn{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.86);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: var(--shadow2);
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+      user-select: none;
+      font-weight: 650;
+    }
+
+    .btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow); }
+
+    .btn.primary{
+      border-color: rgba(255, 74, 162, 0.26);
+      background: linear-gradient(135deg, rgba(255,74,162,0.16), rgba(124,92,255,0.12));
+    }
+
+    .grid{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px){
+      .header-left{
+        flex-direction: column;
+        align-items:flex-start;
+      }
+      .site-logo{
+        width: 60px;
+        height: 60px;
+      }
+    }
+
+    .card{
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .card .hd{
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(255,255,255,0.70);
+    }
+
+    .card .hd h2{
+      margin:0;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(15, 23, 42, 0.72);
+    }
+
+    .card .bd{ padding: 14px 16px 16px; }
+
+    #map{
+      width: 100%;
+      height: 650px;
+      border-radius: calc(var(--r) - 6px);
+      overflow: hidden;
+      border: 1px solid rgba(15, 23, 42, 0.10);
+    }
+
+    @media (max-width: 980px){
+      #map{ height: 420px; }
+    }
+
+    .filters{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 560px){
+      .filters{ grid-template-columns: 1fr; }
+    }
+
+    label{
+      display:block;
+      font-size: 12px;
+      color: rgba(15, 23, 42, 0.72);
+      margin: 0 0 6px;
+    }
+
+    input, select{
+      width:100%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      background: rgba(255,255,255,0.92);
+      color: var(--text);
+      outline:none;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+      font: inherit;
+    }
+
+    input:focus, select:focus{
+      border-color: rgba(255, 74, 162, 0.35);
+      box-shadow: 0 0 0 5px rgba(255, 74, 162, 0.12);
+    }
+
+    .statbar{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .stat{
+      flex: 1 1 160px;
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      background: rgba(255,255,255,0.74);
+      border-radius: 16px;
+      padding: 10px 12px;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+    }
+
+    .stat .n{
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .stat .t{
+      margin-top: 3px;
+      font-size: 12px;
+      color: rgba(15, 23, 42, 0.60);
+    }
+
+    .list{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 560px;
+      overflow:auto;
+      padding-right: 4px;
+    }
+
+    @media (max-width: 980px){
+      .list{ max-height: unset; }
+    }
+
+    .item{
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      background: rgba(255,255,255,0.84);
+      border-radius: 18px;
+      padding: 12px 12px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+
+    .item:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 16px 32px rgba(15, 23, 42, 0.10);
+    }
+
+    .item .name{
+      font-weight: 900;
+      letter-spacing: -0.01em;
+    }
+
+    .item .meta{
+      margin-top: 6px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: rgba(15, 23, 42, 0.82);
+    }
+
+    .muted{ color: rgba(15, 23, 42, 0.58); }
+
+    a{ color: rgba(124, 92, 255, 0.95); text-decoration: none; font-weight: 700; }
+    a:hover{ text-decoration: underline; }
+
+.tablewrap{
+  overflow: visible;
+  border-radius: var(--r);
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: rgba(255,255,255,0.80);
+  box-shadow: var(--shadow);
+  margin-top: 14px;
+}
+
+table{
+  width:100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+thead th{
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.10);
+  font-size: 12px;
+  color: rgba(15, 23, 42, 0.70);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 12px 12px;
+  text-align:left;
+  white-space: normal;
+  word-break: break-word;
+}
+
+tbody td{
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  padding: 12px 12px;
+  font-size: 13px;
+  color: rgba(15, 23, 42, 0.90);
+  vertical-align: top;
+  white-space: normal;
+  word-break: break-word;
+}
+
+    tbody tr:hover{ background: rgba(255, 74, 162, 0.06); }
+
+    .footer{
+      margin-top: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: rgba(15, 23, 42, 0.62);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-card">
+      <img src="data/logo.jpg" alt="Logo" class="auth-logo" onerror="this.style.display='none'">
+      <h2 class="auth-title">Zaštićen pristup</h2>
+      <p class="auth-sub">Unesite lozinku za pristup spisku porodilišta i interaktivnoj karti.</p>
+
+      <div class="auth-row">
+        <label for="passwordInput">Lozinka</label>
+        <input id="passwordInput" type="password" placeholder="Unesite lozinku" autocomplete="current-password" />
+      </div>
+
+      <div class="auth-actions">
+        <button class="btn primary" id="unlockBtn" type="button">Otvori sajt</button>
+      </div>
+
+      <div class="auth-msg" id="authMsg"></div>
+    </div>
+  </div>
+
+  <div class="wrap app-hidden" id="app">
+    <header>
+      <div class="header-left">
+        <img src="data/logo.jpg" alt="Logo" class="site-logo" onerror="this.style.display='none'">
+        <div>
+          <h1>Porodilišta u Srbiji</h1>
+          <p class="sub"></p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="btnFit">Uklopi kartu</button>
+        <button class="btn" id="btnReset">Resetuj filter</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <div class="hd"><h2>Karta</h2></div>
+        <div class="bd">
+          <div id="map"></div>
+          <div class="footer">
+            Klik na lokaciju prikazuje detalje o ustanovi. Link otvara Google Maps pretragu za adresu.
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="hd"><h2>Spisak porodilišta u Srbiji</h2></div>
+        <div class="bd">
+          <div class="filters">
+            <div>
+              <label for="q">Pretraga po nazivu</label>
+              <input id="q" type="text" placeholder="Npr. Narodni front, Beograd, Višegradska…" />
+            </div>
+            <div>
+              <label for="oblast">Pretraga po NSTJ3 oblasti</label>
+              <select id="oblast">
+                <option value="">Sve oblasti</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="statbar">
+            <div class="stat">
+              <div class="n" id="statTotal">0</div>
+              <div class="t">Ukupno</div>
+            </div>
+            <div class="stat">
+              <div class="n" id="statShown">0</div>
+              <div class="t">Prikazano</div>
+            </div>
+          </div>
+
+          <div style="height:10px"></div>
+          <div class="list" id="list"></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      <p></p>
+      <p>Napomena: Svi podaci prikazani na veb-sajtu služe u informativne svrhe. Autori ne snose odgovornost za eventualne netačnosti, izmene ili posledice korišćenja objavljenih informacija.</p>
+      <p>Beograd, februar, 2026. godine</p>
+      <p>Kontakt osoba: <a href="mailto:filip.arnaut@ipb.ac.rs">filip.arnaut@ipb.ac.rs</a></p>
+    </div>
+  </div>
+
+  <script>
+    const CSV_PATH = "data/adresar.csv";
+    const LOGO_PATH = "data/logo.jpg";
+    const HIDE_COLS = new Set(["longitude","latitude","lon","lat","x","y"]);
+    const PASSWORD_HASH = "cced1ccabb84b591708d6688c90112b7299a5ce2ea76c7636dd7f8091f9e9aef";
+
+    const appEl = document.getElementById("app");
+    const authOverlayEl = document.getElementById("authOverlay");
+    const passwordInputEl = document.getElementById("passwordInput");
+    const unlockBtnEl = document.getElementById("unlockBtn");
+    const authMsgEl = document.getElementById("authMsg");
+
+    const elOblast = document.getElementById("oblast");
+    const elList = document.getElementById("list");
+    const elTHead = document.getElementById("thead");
+    const elTBody = document.getElementById("tbody");
+
+    const esc = (s) => String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+
+    const stripBom = (t) => (t && t.charCodeAt(0) === 0xFEFF) ? t.slice(1) : t;
+
+    function findKey(obj, candidates) {
+      const keys = Object.keys(obj || {});
+      const lower = new Map(keys.map(k => [k.toLowerCase().trim(), k]));
+      for (const c of candidates) {
+        const hit = lower.get(String(c).toLowerCase().trim());
+        if (hit) return hit;
+      }
+      return null;
+    }
+
+    function normalizeUrl(v) {
+      const s = String(v ?? "").trim();
+      if (!s) return "";
+      if (/^https?:\/\//i.test(s)) return s;
+      return "https://" + s;
+    }
+
+    function normalizeEmail(v) {
+      return String(v ?? "").trim();
+    }
+
+    function normalizePhone(v) {
+      return String(v ?? "").trim();
+    }
+
+    function gmapsSearch(row) {
+      const q = [row.facility, row.adresa, row.oblast].filter(Boolean).join(", ");
+      return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
+    }
+
+    function sha256Hex(text) {
+      const data = new TextEncoder().encode(text);
+      return crypto.subtle.digest("SHA-256", data).then(buffer => {
+        const bytes = Array.from(new Uint8Array(buffer));
+        return bytes.map(b => b.toString(16).padStart(2, "0")).join("");
+      });
+    }
+
+    async function unlockSite() {
+      const pwd = passwordInputEl.value;
+      authMsgEl.textContent = "";
+
+      try {
+        const hash = await sha256Hex(pwd);
+        if (hash === PASSWORD_HASH) {
+          authOverlayEl.style.display = "none";
+          appEl.classList.remove("app-hidden");
+          map.invalidateSize();
+          return;
+        }
+      } catch (e) {
+        authMsgEl.textContent = "Greška pri proveri lozinke.";
+        return;
+      }
+
+      authMsgEl.textContent = "Pogrešna lozinka.";
+      passwordInputEl.select();
+    }
+
+    unlockBtnEl.addEventListener("click", unlockSite);
+    passwordInputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") unlockSite();
+    });
+
+    const map = L.map("map", { zoomControl: true }).setView([44.0, 20.9], 7);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const markersLayer = L.layerGroup().addTo(map);
+    const markerById = new Map();
+
+    let RAW = [];
+    let DATA = [];
+    let TABLE_COLS = [];
+    let META_KEYS = {};
+
+    function buildTableHeader() {
+      const cols = Object.keys(RAW[0] || {}).filter(c => !HIDE_COLS.has(c.toLowerCase().trim()));
+      const tr = document.createElement("tr");
+      for (const c of cols) {
+        const th = document.createElement("th");
+        th.textContent = c;
+        tr.appendChild(th);
+      }
+      elTHead.innerHTML = "";
+      elTHead.appendChild(tr);
+      return cols;
+    }
+
+    function getFiltered() {
+      const q = document.getElementById("q").value.trim().toLowerCase();
+      const ob = document.getElementById("oblast").value.trim();
+
+      return DATA.filter(d => {
+        if (ob && d.oblast !== ob) return false;
+        if (!q) return true;
+
+        const hay = [
+          d.facility, d.adresa, d.oblast, d.email, d.web, d.telefon,
+          ...Object.values(d.raw).map(v => (v ?? "").toString())
+        ].join(" ").toLowerCase();
+
+        return hay.includes(q);
+      });
+    }
+
+    function linkifyTableCell(columnName, value, rowObj) {
+      const c = (columnName || "").toLowerCase().trim();
+      const v = String(value ?? "").trim();
+
+      if (!v) return "—";
+
+      if (META_KEYS.kAdresa && c === META_KEYS.kAdresa.toLowerCase().trim()) {
+        const url = gmapsSearch(rowObj);
+        return `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(v)}</a>`;
+      }
+
+      if (META_KEYS.kEmail && c === META_KEYS.kEmail.toLowerCase().trim()) {
+        return `<a href="mailto:${esc(v)}">${esc(v)}</a>`;
+      }
+
+      if (META_KEYS.kWeb && c === META_KEYS.kWeb.toLowerCase().trim()) {
+        const url = normalizeUrl(v);
+        return `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(v)}</a>`;
+      }
+
+      if (META_KEYS.kTelefon && c === META_KEYS.kTelefon.toLowerCase().trim()) {
+        const telHref = "tel:" + v.replace(/\s+/g, "");
+        return `<a href="${esc(telHref)}">${esc(v)}</a>`;
+      }
+
+      return esc(v);
+    }
+
+    function render(rows) {
+      document.getElementById("statShown").textContent = String(rows.length);
+
+      elList.innerHTML = "";
+      if (!rows.length) {
+        elList.innerHTML = `<div class="muted" style="padding:6px 2px;">Nema rezultata.</div>`;
+      } else {
+        for (const d of rows) {
+          const url = gmapsSearch(d);
+          const webUrl = d.web ? normalizeUrl(d.web) : "";
+
+          const div = document.createElement("div");
+          div.className = "item";
+          div.innerHTML = `
+            <div class="name">${esc(d.facility)}</div>
+            <div class="meta">
+              <div><span class="muted">Oblast:</span> ${esc(d.oblast || "—")}</div>
+              <div style="margin-top:2px;"><span class="muted">Adresa:</span> ${esc(d.adresa || "—")}</div>
+              <div style="margin-top:2px;"><span class="muted">Telefon:</span> ${d.telefon ? esc(d.telefon) : "—"}</div>
+              <div style="margin-top:2px;"><span class="muted">Email:</span> ${d.email ? `<a href="mailto:${esc(d.email)}">${esc(d.email)}</a>` : "—"}</div>
+              <div style="margin-top:2px;"><span class="muted">Web:</span> ${webUrl ? `<a href="${esc(webUrl)}" target="_blank" rel="noopener">${esc(d.web)}</a>` : "—"}</div>
+              <div style="margin-top:6px;">
+                <a href="${esc(url)}" target="_blank" rel="noopener">Google Maps</a>
+              </div>
+            </div>
+          `;
+          div.addEventListener("click", () => {
+            if (d.lat != null && d.lon != null) {
+              map.setView([d.lat, d.lon], 14, { animate: true });
+              const mk = markerById.get(d.id);
+              if (mk) mk.openPopup();
+            }
+          });
+          elList.appendChild(div);
+        }
+      }
+
+      elTBody.innerHTML = "";
+      for (const d of rows) {
+        const tr = document.createElement("tr");
+        tr.style.cursor = (d.lat != null && d.lon != null) ? "pointer" : "default";
+
+        for (const c of TABLE_COLS) {
+          const td = document.createElement("td");
+          const v = (d.raw[c] ?? "").toString();
+          td.innerHTML = linkifyTableCell(c, v, d);
+          tr.appendChild(td);
+        }
+
+        tr.addEventListener("click", () => {
+          if (d.lat != null && d.lon != null) {
+            map.setView([d.lat, d.lon], 14, { animate: true });
+            const mk = markerById.get(d.id);
+            if (mk) mk.openPopup();
+          }
+        });
+
+        elTBody.appendChild(tr);
+      }
+
+      markersLayer.clearLayers();
+      markerById.clear();
+
+      const pts = [];
+      for (const d of rows) {
+        if (d.lat == null || d.lon == null) continue;
+        pts.push([d.lat, d.lon]);
+
+        const url = gmapsSearch(d);
+        const webUrl = d.web ? normalizeUrl(d.web) : "";
+
+        const popup = `
+          <div style="min-width:240px">
+            <div style="font-weight:900;margin-bottom:6px">${esc(d.facility)}</div>
+            <div style="margin-bottom:6px;color:rgba(15,23,42,0.82)"><strong>Adresa:</strong> ${esc(d.adresa || "—")}</div>
+            <div style="margin-bottom:6px;color:rgba(15,23,42,0.82)"><strong>Oblast:</strong> ${esc(d.oblast || "—")}</div>
+            <div style="margin-bottom:6px;color:rgba(15,23,42,0.82)"><strong>Telefon:</strong> ${d.telefon ? esc(d.telefon) : "—"}</div>
+            <div style="margin-bottom:6px;color:rgba(15,23,42,0.82)"><strong>Email:</strong> ${d.email ? `<a href="mailto:${esc(d.email)}">${esc(d.email)}</a>` : "—"}</div>
+            <div style="margin-bottom:8px;color:rgba(15,23,42,0.82)"><strong>Web:</strong> ${webUrl ? `<a href="${esc(webUrl)}" target="_blank" rel="noopener">${esc(d.web)}</a>` : "—"}</div>
+            <div><a href="${esc(url)}" target="_blank" rel="noopener">Google Maps</a></div>
+          </div>
+        `;
+
+        const mk = L.marker([d.lat, d.lon]).bindPopup(popup, { maxWidth: 360 });
+        mk.addTo(markersLayer);
+        markerById.set(d.id, mk);
+      }
+
+      if (pts.length && !render._didFitOnce) {
+        render._didFitOnce = true;
+        map.fitBounds(L.latLngBounds(pts).pad(0.18));
+      }
+    }
+
+    function fitToRows() {
+      const rows = getFiltered();
+      const pts = rows.filter(d => d.lat != null && d.lon != null).map(d => [d.lat, d.lon]);
+      if (pts.length) map.fitBounds(L.latLngBounds(pts).pad(0.18));
+    }
+
+    function initFilters() {
+      elOblast.innerHTML = `<option value="">Sve oblasti</option>`;
+      const oblasti = Array.from(new Set(DATA.map(d => d.oblast).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
+      for (const o of oblasti) {
+        const opt = document.createElement("option");
+        opt.value = o;
+        opt.textContent = o;
+        elOblast.appendChild(opt);
+      }
+    }
+
+    function normalizeData() {
+      if (!RAW.length) return;
+
+      const sample = RAW[0];
+
+      const kFacility = findKey(sample, [
+        "Maternity facility",
+        "maternity facility",
+        "Facility",
+        "Facility name",
+        "Ustanova",
+        "ustanova",
+        "Naziv",
+        "naziv",
+        "Porodilište",
+        "Porodiliste"
+      ]);
+
+      const kOblast = findKey(sample, [
+        "Oblast",
+        "oblast",
+        "NUTS3",
+        "NUTS 3",
+        "NSTJ3",
+        "NUTS3_oblast",
+        "NUTS3 oblast",
+        "Region"
+      ]);
+
+      const kAdresa = findKey(sample, [
+        "Adresa",
+        "adresa",
+        "Address",
+        "address",
+        "Lokacija",
+        "lokacija",
+        "Ulica",
+        "ulica"
+      ]);
+
+      const kEmail = findKey(sample, [
+        "Email",
+        "email",
+        "E-mail",
+        "e-mail",
+        "Mail",
+        "mail"
+      ]);
+
+      const kWeb = findKey(sample, [
+        "Web",
+        "web",
+        "Website",
+        "website",
+        "Webpage",
+        "webpage",
+        "URL",
+        "url",
+        "Link",
+        "link"
+      ]);
+
+      const kTelefon = findKey(sample, [
+        "Telefon",
+        "telefon",
+        "Phone",
+        "phone",
+        "Phone number",
+        "phone number",
+        "Tel",
+        "tel"
+      ]);
+
+      const kLon = findKey(sample, ["longitude","lon","x","Longitude","LON","Long"]);
+      const kLat = findKey(sample, ["latitude","lat","y","Latitude","LAT"]);
+
+      META_KEYS = { kFacility, kOblast, kAdresa, kEmail, kWeb, kTelefon, kLon, kLat };
+      TABLE_COLS = buildTableHeader();
+
+      DATA = RAW.map((r, idx) => {
+        const facility = (kFacility ? r[kFacility] : "").toString().trim() || "(Bez naziva)";
+        const oblast = (kOblast ? r[kOblast] : "").toString().trim();
+        const adresa = (kAdresa ? r[kAdresa] : "").toString().trim();
+        const email = normalizeEmail(kEmail ? r[kEmail] : "");
+        const web = String(kWeb ? r[kWeb] : "").trim();
+        const telefon = normalizePhone(kTelefon ? r[kTelefon] : "");
+
+        const lon = Number(String(kLon ? r[kLon] : "").replace(",", "."));
+        const lat = Number(String(kLat ? r[kLat] : "").replace(",", "."));
+
+        return {
+          id: idx + 1,
+          facility,
+          oblast,
+          adresa,
+          email,
+          web,
+          telefon,
+          lon: Number.isFinite(lon) ? lon : null,
+          lat: Number.isFinite(lat) ? lat : null,
+          raw: r
+        };
+      });
+
+      document.getElementById("statTotal").textContent = String(DATA.length);
+      initFilters();
+      render._didFitOnce = false;
+      render(getFiltered());
+    }
+
+    async function loadCsv() {
+      const res = await fetch(CSV_PATH, { cache: "no-store" });
+      if (!res.ok) throw new Error("CSV nije dostupan: " + CSV_PATH);
+
+      const text = stripBom(await res.text());
+
+      const parsed = Papa.parse(text, {
+        header: true,
+        skipEmptyLines: true,
+        dynamicTyping: false
+      });
+
+      if (parsed.errors && parsed.errors.length) {
+        throw new Error("Greška pri parsiranju CSV-a.");
+      }
+
+      RAW = (parsed.data || []).filter(row => {
+        if (!row) return false;
+        return Object.values(row).some(v => String(v ?? "").trim() !== "");
+      });
+
+      if (!RAW.length) throw new Error("CSV je prazan.");
+
+      normalizeData();
+    }
+
+    document.getElementById("q").addEventListener("input", () => render(getFiltered()));
+    document.getElementById("oblast").addEventListener("change", () => render(getFiltered()));
+    document.getElementById("btnFit").addEventListener("click", fitToRows);
+
+    document.getElementById("btnReset").addEventListener("click", () => {
+      document.getElementById("q").value = "";
+      document.getElementById("oblast").value = "";
+      render(getFiltered());
+      fitToRows();
+    });
+
+    loadCsv().catch(() => {
+      document.getElementById("statTotal").textContent = "0";
+      document.getElementById("statShown").textContent = "0";
+      elList.innerHTML = `<div class="muted" style="padding:6px 2px;">Nije moguće učitati CSV fajl. Proveri da li se <b>${esc(CSV_PATH)}</b> nalazi u folderu <b>data</b> i da li se sajt pokreće preko lokalnog servera, a ne preko <b>file://</b>.</div>`;
+      elTHead.innerHTML = "";
+      elTBody.innerHTML = "";
+      markersLayer.clearLayers();
+    });
+  </script>
+</body>
+</html>
