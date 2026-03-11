@@ -1,0 +1,56 @@
+﻿ID,Ustanova,Region,Oblast,Opština,Adresa,Email,Web,Telefon,longitude,latitude
+1,"Ginekološko-akušerska klinika ""Narodni front""",Beograd,Beogradska oblast,Savski venac,Kraljice Natalije 62,uprava@gakfront.org,,112068227,20.46037896,44.80986826
+2,Univerzitetski klinički centar Srbije ,Beograd,Beogradska oblast,Savski venac,Pasterova 2,mediacentar@kcs.ac.rs,,112687160,20.46022912,44.80058666
+3,"Kliničko bolnički centar ""Dr Dragiša Mišović-Dedinje""",Beograd,Beogradska oblast,Savski venac,Heroja Milana Tepića 1,office@dragisamisovic.bg.ac.rs,,113630600,20.4590613,44.7788327
+4,"Kliničko bolnički centar ""Zemun""",Beograd,Beogradska oblast,Zemun,Vukova 9,direktor@kbczemun.bg.ac.rs,,113772696,20.40650076,44.84202916
+5,"Kliničko bolnički centar ""Zvezdara""",Beograd,Beogradska oblast,Zvezdara,Dimitrija Tucovića 161,kabinet@kbczvezdara.rs,,113806969,20.49981059,44.79987867
+6,Opšta bolnica Bor,Južna i istočna Srbija,Borska oblast,Bor,dr Dragiše Mišovića 1,borbolnica@sezampro.rs,www.borbolnica.org.rs,30458040,22.09159367,44.07981593
+7,Opšta bolnica Majdanpek,Južna i istočna Srbija,Borska oblast,Majdanpek,Kapetanska 30,opstabolnicampek@mts.rs,www.obm.org.rs,30583319,21.94106826,44.42439013
+8,Opšta bolnica Kladovo,Južna i istočna Srbija,Borska oblast,Kladovo,Dunavska 1-3,zckld@kladovonet.com,www.zckladovo.co.rs,19801116,22.6121142,44.61132087
+9,Opšta bolnica Negotin,Južna i istočna Srbija,Borska oblast,Negotin,Badnjevska 4,zcnuprava@mts.rs,www.zcnegotin.rs,19542951,22.52768343,44.23254178
+10,Opšta bolnica Petrovac na Mlavi,Južna i istočna Srbija,Braničevska oblast,Petrovac na Mlavi,"Moravska br. 2, 12300 Petrovac na Mlavi",office@opstabolnicapetrovac.rs,,12327983,21.4156405,44.3763869
+11,Opšta bolnica Požarevac,Južna i istočna Srbija,Braničevska oblast,Požarevac,"Bratstva jedinstva 135, 12000 Požarevac",bolpo@obp.rs,,12550111,21.18712079,44.63238823
+12,Opšta bolnica Leskovac,Južna i istočna Srbija,Jablanička oblast,Leskovac,Svetozara Markovića 110,uprava.bolnice@bolnicaleskovac.org,www.bolnicaleskovac.org,163444501,21.93797445,42.99526594
+13,Univerzitetski klinički centar Vojvodine,Vojvodina,Južnobačka oblast,Novi Sad,Hajduk Veljkova 1,uprava@kcv.rs,,214843484,19.82338065,45.25077811
+14,Opšta bolnica Vrbas,Vojvodina,Južnobačka oblast,Vrbas,Milana Čekića 4,opbol@mts.rs,,217954560,19.63946028,45.58699248
+15,Opšta bolnica Pančevo,Vojvodina,Južnobanatska oblast,Pančevo,Miloša Trebinjca 11,opstabolnica@bolnicapancevo.rs,,13319900,20.65347807,44.86766477
+16,Opšta bolnica Vršac,Vojvodina,Južnobanatska oblast,Vršac,Abraševićeva bb,obvrsac@eunet.rs,,13838004,21.3068596,45.12168025
+17,Opšta bolnica Valjevo,Šumadija i zapadna Srbija,Kolubarska oblast,Valjevo,Sinđelićeva 62,office@zcvaljevo.com,www.obvaljevo.rs,14295295,19.89113021,44.27662764
+18,Opšta bolnica Loznica,Šumadija i zapadna Srbija,Mačvanska oblast,Loznica,Bolnička 65,uprava@bolnicaloznica.rs,www.bolnicaloznica.rs,15873311,19.22965808,44.53614748
+19,Opšta bolnica Šabac,Šumadija i zapadna Srbija,Mačvanska oblast,Šabac,Popa Karana br.4,opstabolnicasabac@mts.rs,www.bolnica015.org.rs,15363300,19.69317125,44.75086202
+20,Opšta bolnica Čačak,Šumadija i zapadna Srbija,Moravička oblast,Čačak,Dr Dragiše Mišovića br.205,obcacak@gmail.com,http://obcacak.co.rs/,32307066,20.36624194,43.87304677
+21,Opšta bolnica Gornji Milanovac,Šumadija i zapadna Srbija,Moravička oblast,Gornji Milanovac,Vojvode Milana br.37,bolnica@bolnica-gm.org,https://www.bolnica-gm.org/,32711670,20.45780088,44.0190999
+22,Univerzitetski klinički centar Niš,Južna i istočna Srbija,Nišavska oblast,Medijana,BUL. DR ZORANA ĐINĐIĆA 48,kcnissrb@gmail.com,www.kcnis.rs,18506906,21.91364598,43.31660612
+23,Opšta bolnica Aleksinac,Južna i istočna Srbija,Nišavska oblast,Aleksinac,Momčila Popovića 144,obaleksinac@obaleksinac.rs,http://obaleksinac.rs/index.php,18804211,21.70158782,43.54034458
+24,Opšta bolnica Surdulica,Južna i istočna Srbija,Pčinjska oblast,Surdulica,Srpskih vladara 111,zc.surdulica@mts.rs,,17815300,22.16867068,42.68424892
+25,Opšta bolnica Vranje,Južna i istočna Srbija,Pčinjska oblast,Vranje,Jovana Jankovića Lunge 1,zcvranje@verat.net,www.zcvranje.com,17421550,21.90431011,42.55130621
+26,Opšta bolnica Pirot,Južna i istočna Srbija,Pirotska oblast,Pirot,Vojvode Momčila bb,bolnicapirot@pibolnica.rs,,10343101,22.56502408,43.15864933
+27,Opšta bolnica Smederevo,Južna i istočna Srbija,Podunavska oblast,Smederevo,Knez Mihailova 51,ob.smederevo@yahoo.com,,26240750,20.924666,44.66070684
+28,Opšta bolnica Smederevska Palanka,Južna i istočna Srbija,Podunavska oblast,Smederevska Palanka,Vuka Karadžića 147,stefanvisokisp@gmail.com,,26330300,20.96880428,44.36439771
+29,Opšta bolnica Ćuprija,Šumadija i zapadna Srbija,Pomoravska oblast,Ćuprija,Miodraga Novakovića br.78,bolnicacuprija@mts.rs,,358471503,21.37678095,43.94013838
+30,Opšta bolnica Jagodina,Šumadija i zapadna Srbija,Pomoravska oblast,Jagodina,Karađorđeva br.4,objagodina@mts.rs,,358150200,21.25679661,43.97821607
+31,Opšta bolnica Paraćin,Šumadija i zapadna Srbija,Pomoravska oblast,Paraćin,Majora Marka br.12,direktor@obparacin.rs,,358155100,21.41434888,43.86402069
+32,Opšta bolnica Kruševac,Šumadija i zapadna Srbija,Rasinska oblast,Kruševac,Kosovska 16,info@bolnicakrusevac.org.rs,,37414555,21.32108001,43.58052108
+33,Opšta bolnica Kraljevo,Šumadija i zapadna Srbija,Raška oblast,Kraljevo,Jug Bogdanova 110,office@bolnicastudenicakv.co.rs,www.bolnicastudenicakv.co.rs,36301905,20.69627288,43.72334339
+34,Opšta bolnica Novi Pazar,Šumadija i zapadna Srbija,Raška oblast,Novi Pazar,Generala Živkovića 1,kontakt.obnp@gmail.com,,20391091,20.51084236,43.13295149
+35,Opšta bolnica Subotica,Vojvodina,Severnobačka oblast,Subotica,Izvorska 3,info@bolnicasubotica.com,bolnicasubotica.com,24555222,19.6722862,46.08088158
+36,Opšta bolnica Kikinda,Vojvodina,Severnobanatska oblast,Kikinda,Đure Jakšića 110,bolnica@obki.rs,www.obki.rs,230422041,20.47814606,45.83363177
+37,Opšta bolnica Senta,Vojvodina,Severnobanatska oblast,Senta,Karađorđeva br. 64,office@hospitalsenta.rs,www.hospitalsenta.rs,24815111,20.0935057,45.9165999
+38,Opšta bolnica Zrenjanin,Vojvodina,Srednjobanatska oblast,Zrenjanin,Dr Vase Savića 5,bolnicazr@ptt.rs,,23536930,20.37666145,45.37380738
+39,Opšta bolnica Sremska Mitrovica,Vojvodina,Sremska oblast,Sremska Mitrovica,Stari šor 65,info@obsm.rs,http://www.obsm.rs/,22610222,19.60684591,44.97340775
+40,Univerzitetski klinički centar Kragujevac,Šumadija i zapadna Srbija,Šumadijska oblast,Kragujevac,Zmaj Jovina 30,uprava@kc-kg.rs,www.kc-kg.rs,34505010,20.9141494,44.01860595
+41,Opšta bolnica Aranđelovac,Šumadija i zapadna Srbija,Šumadijska oblast,Aranđelovac,Kralja Petra I 62,zcarandjelovac@gmail.com,www.zcarandjelovac.org.rs,34712866,20.56184337,44.30495062
+42,Opšta bolnica Prokuplje,Južna i istočna Srbija,Toplička oblast,Prokuplje,ul. Pasjačka br. 2,office@bolnicaprokuplje.com,https://bolnicaprokuplje.com,27321087,21.59031166,43.22711211
+43,Opšta bolnica Knjaževac,Južna i istočna Srbija,Zaječarska oblast,Knjaževac,4. juli 2,upravazck@mts.rs,www.zcknjazevac.rs,19731526,22.24705693,43.56409683
+44,Opšta bolnica Zaječar,Južna i istočna Srbija,Zaječarska oblast,Zaječar,Rasadnička bb,infoszcz@mts.rs,www.zczajecar.com,19425811,22.2914601,43.8917128
+45,Opšta bolnica Sombor,Vojvodina,Zapadnobačka oblast,Sombor,Vojvođanska 75,uprava@bolnicasombor.org.rs,bolnicasombor.org.rs,025 467 700,19.10887939,45.7822116
+46,Opšta bolnica Priboj,Šumadija i zapadna Srbija,Zlatiborska oblast,Priboj,Pribojske čete bb,bolnicapb@gmail.com,www.zcue.rs,332445690,19.51834206,43.5839106
+47,Opšta bolnica Prijepolje,Šumadija i zapadna Srbija,Zlatiborska oblast,Prijepolje,Rajka Divca 2,bolnicaprijepolje@gmail.com,www.zcue.rs,033 712 382 ,19.66299243,43.38922514
+48,Opšta bolnica Užice - odeljenje u Sjenici,Šumadija i zapadna Srbija,Zlatiborska oblast,Sjenica,Tadije Andrića 10,domzdravljasj@open.telekom.rs,www.zcue.rs,20741094,19.99401778,43.27491632
+49,Opšta bolnica Užice,Šumadija i zapadna Srbija,Zlatiborska oblast,Užice,Miloša Obrenovića 17,generalnizc@zcue.rs,www.zcue.rs,031 599 555,19.85914943,43.85155427
+50,Dom zdravlja Bačka Topola (sa stacionarom),Vojvodina,Severnobačka oblast,Bačka Topola,Svetog Stefana 1,domzdravbt@stcable.net,dzbt.co.rs,24715425,19.63286718,45.82238018
+51,Dom zdravlja Lazarevac (sa porodilištem),Beograd,Beogradska oblast,Lazarevac,Dr Đorđa Kovačevića 27,dzla@mts.rs,,118123141,20.2758772,44.38165297
+52,Dom zdravlja Ljubovija (sa stacionarom),Šumadija i zapadna Srbija,Mačvanska oblast,Ljubovija,Vojvode Mišića 58,dzlj@ptt.rs,www.dzljubovija.com,15561898,19.37054289,44.1879746
+53,Dom zdravlja Tutin (sa stacionarom),Šumadija i zapadna Srbija,Raška oblast,Tutin,Bogoljuba Čukica 12,dztutin@gmail.com,,20820520,20.33904974,42.98980581
+54,Dom zdravlja Preševo (sa porodilištem),Južna i istočna Srbija,Pčinjska oblast,Preševo,15. Novembar br. 88,dz.presevo@gmail.com,https://dzpresevo.org,17669195,21.65321146,42.30569328
+55,Dom zdravlja Ivanjica (sa stacionarom),Šumadija i zapadna Srbija,Moravička oblast,Ivanjica,13. septembar br.39,direktordzivanjica@gmail.com,http://dzivanjica.rs/,32662039,20.22606758,43.58808117
